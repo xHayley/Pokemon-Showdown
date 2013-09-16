@@ -511,6 +511,30 @@ var commands = exports.commands = {
 		targetUser.mute(room.id, 7*60*1000);
 	},
 
+	mm: 'minmute',
+	minmute: function(target, room, user) {
+		if (!target) return this.parse('/help minmute');
+
+		target = this.splitTarget(target);
+		var targetUser = this.targetUser;
+		if (!targetUser) {
+			return this.sendReply('User '+this.targetUsername+' not found.');
+		}
+		if (!this.can('mute', targetUser, room)) return false;
+
+		if (((targetUser.mutedRooms[room.id] && (targetUser.muteDuration[room.id]||0) >= 60*1000) || targetUser.locked) && !target) {
+			var problem = ' but was already '+(!targetUser.connected ? 'offline' : targetUser.locked ? 'locked' : 'muted');
+			return this.privateModCommand('('+targetUser.name+' would be muted by '+user.name+problem+'.)');
+		}
+
+		targetUser.popup(user.name+' has muted you for a minute. '+target);
+		this.addModCommand(''+targetUser.name+' was muted by '+user.name+' for a minute.' + (target ? " (" + target + ")" : ""));
+		var alts = targetUser.getAlts();
+		if (alts.length) this.addModCommand(""+targetUser.name+"'s alts were also muted: "+alts.join(", "));
+
+		targetUser.mute(room.id, 60*1000, true);
+	},
+
 	hm: 'hourmute',
 	hourmute: function(target, room, user) {
 		if (!target) return this.parse('/help hourmute');
