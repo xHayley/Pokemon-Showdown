@@ -818,6 +818,20 @@ var commands = exports.commands = {
 		}
 		this.logModCommand(user.name+' set modchat to '+room.modchat);
 	},
+	
+	rd: 'roomdeclare',
+	roomdeclare: function(target, room, user) {
+		if (room.id === 'lobby') return false;
+		if (room.id === 'awayroom') return false;
+		if (room.id === 'staff') return false;
+		if (!this.can('broadcast')) return false;
+		if (!target) return this.parse('/help roomdeclare');
+
+		if (!this.canTalk()) return;
+
+		this.add('|raw|<div class="broadcast-blue"><b>'+target+'</b></div>');
+		this.logModCommand(user.name+' declared '+target);
+	},
 
 	declare: function(target, room, user) {
 		if (!target) return this.parse('/help declare');

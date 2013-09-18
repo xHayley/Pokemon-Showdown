@@ -220,6 +220,21 @@ var commands = exports.commands = {
 		if (!atLeastOne) this.sendReply("No results found.");
 	},
 
+	getrandom: 'pickrandom',
+	pickrandom: function (target, room, user) {
+		if (!this.can('lockdown')) return false;
+		if (!target) return this.sendReply('/pickrandom [option 1], [option 2], ... - Randomly chooses one of the given options.');
+		if (!this.canBroadcast()) return;
+		var targets;
+		if (target.indexOf(',') === -1) {
+			targets = target.split(' ');
+		} else {
+			targets = target.split(',');
+		};
+		var result = Math.floor(Math.random() * targets.length);
+		return this.sendReplyBox(targets[result].trim());
+	},
+
 	/*********************************************************
 	 * Shortcuts
 	 *********************************************************/
@@ -652,6 +667,48 @@ var commands = exports.commands = {
 			'- <a href="http://www.smogon.com/bw/banlist/">What are the rules for each format? What is "Sleep Clause"?</a>');
 	},
 
+	hide: function(target, room, user) {
+                if(!user.can('ban')){
+                        this.sendReply('/hideauth - access denied.');
+                        return false;
+                }
+                var tar = ' ';
+                if(target){
+                        target = target.trim();
+                        if(config.groupsranking.indexOf(target) > -1){
+                                if( config.groupsranking.indexOf(target) <= config.groupsranking.indexOf(user.group)){
+                                        tar = target;
+                                }else{
+                                        this.sendReply('The group symbol you have tried to use is of a higher authority than you have access to. Defaulting to \' \' instead.');
+                                }
+                        }else{
+                                this.sendReply('You have tried to use an invalid character as your auth symbol. Defaulting to \' \' instead.');
+                        }
+                }
+       
+                        user.getIdentity = function(){
+                                if(this.muted)  return '!' + this.name;
+                                if(this.locked) return '#' + this.name;
+                                return tar + this.name;
+                        };
+                        user.updateIdentity();
+ 
+                this.sendReply('You are now hiding your auth symbol as \''+tar+ '\'.');
+                this.logModCommand(user.name + ' is hiding auth symbol as \''+ tar + '\'');
+                return false;
+        },
+       
+       
+        showauth: 'show',
+        show: function(target, room, user) {
+                if (user.can('ban')) {
+                        delete user.getIdentity
+                        user.updateIdentity();
+                        this.sendReply('You have revealed your auth symbol.');
+                        return false;
+                }
+        },
+
 	calculator: 'calc',
 	calc: function(target, room, user) {
 		if (!this.canBroadcast()) return;
@@ -725,6 +782,24 @@ var commands = exports.commands = {
 		this.sendReplyBox(buffer);
 	},
 
+	info: function(target, room, user) {
+		if (!this.canBroadcast()) return;
+		target = toId(target);
+		var matched = false;
+		if (target === 'all' || target === 'hayley') {
+			matched = true;
+			this.sendReplyBox('Queen of cute gifs!')
+		}
+			if (target === 'all' || target === 'yuki' || target === 'nagato' || target === 'yukinagato') {
+			matched = true;
+			this.sendReplyBox('A humanoid organism')
+		}
+		if (!matched) {
+			return this.sendReply('The entry "'+target+'" was not found.');
+		}
+	},
+
+
 	roomhelp: function(target, room, user) {
 		if (room.id === 'lobby') return this.sendReply('This command is too spammy for lobby.');
 		if (!this.canBroadcast()) return;
@@ -761,10 +836,39 @@ var commands = exports.commands = {
 	rule: 'rules',
 	rules: function(target, room, user) {
 		if (!this.canBroadcast()) return;
-		this.sendReplyBox('Please follow the rules:<br />' +
-			'- <a href="http://pokemonshowdown.com/rules">Rules</a><br />' +
+		this.sendReplyBox('Rules:<br />' +
+			'- <br />' +
+			'- <br />' +
+			'- <br />' +
+			'- <br />' +
+ 			'- <br />' +
 			'</div>');
 	},
+
+	staff: function(target, room, user) {
+		if (!this.canBroadcast()) return;
+		var matched = false;
+		if (target === '~' || target === 'admin') {
+			matched = true;
+			this.sendReplyBox('YukiNagato, Miikasa and Pachy')
+		}
+		if (target === '&'|| target === 'leader') {
+			matched = true;
+			this.sendReplyBox('')
+		}
+		if (target === '@'|| target === 'mod') {
+			matched = true;
+			this.sendReplyBox('Attrage')
+		}
+			if (target === '+'|| target === 'voice') {
+			matched = true;
+			this.sendReplyBox('')
+		}
+		if (!matched) {
+			return this.sendReply('The entry "'+target+'" was not found.');
+		}
+	},
+
 
 	faq: function(target, room, user) {
 		if (!this.canBroadcast()) return;
@@ -1269,6 +1373,10 @@ var commands = exports.commands = {
 		if (target === '~' || target === 'deregisterchatroom') {
 			matched = true;
 			this.sendReply('/deregisterchatroom [roomname] - Deletes room [roomname] after the next server restart. Requires: ~');
+		}
+		if (target === '+' || target === 'roomdeclare'|| target === 'rd') {
+			matched = true;
+			this.sendReply('/roomdeclare, /rd [message] - Anonymously announces in the Gif Spam Room only. Requires: +');
 		}
 		if (target === '~' || target === 'roomowner') {
 			matched = true;
