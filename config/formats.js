@@ -157,8 +157,8 @@ exports.Formats = [
 		// no restrictions, for serious
 		ruleset: []
 	},
-	{
-		// Doubles
+
+	// Doubles
 	///////////////////////////////////////////////////////////////////
 
 	{

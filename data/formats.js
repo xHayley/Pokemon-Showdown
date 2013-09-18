@@ -381,5 +381,3 @@ exports.BattleFormats = {
 		}
 	}
 };
-
-
