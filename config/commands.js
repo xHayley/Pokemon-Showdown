@@ -641,10 +641,10 @@ var commands = exports.commands = {
 	groups: function(target, room, user) {
 		if (!this.canBroadcast()) return;
 		this.sendReplyBox('+ <b>Voice</b> - They can use ! commands like !groups, and talk during moderated chat<br />' +
-			'% <b>Driver</b> - The above, and they can also mute and lock users and check for alts<br />' +
-			'@ <b>Moderator</b> - The above, and they can ban users<br />' +
+			'@ <b>Moderator</b> - They can ban, mute and lock users and set modchat.<br />' +
 			'&amp; <b>Leader</b> - The above, and they can promote moderators and force ties<br />'+
-			'~ <b>Administrator</b> - They can do anything, like change what this message says');
+			'~ <b>Administrator</b> - They can do anything, like change what this message says<br />'+
+			'* <b>Super Administrator</b> - Stronger than Superman and Batman combined.<br />');
 	},
 
 	opensource: function(target, room, user) {
@@ -788,14 +788,10 @@ var commands = exports.commands = {
 		var matched = false;
 		if (target === 'all' || target === 'hayley') {
 			matched = true;
-			this.sendReplyBox('Queen of cute gifs!')
-		}
-			if (target === 'all' || target === 'yuki' || target === 'nagato' || target === 'yukinagato') {
-			matched = true;
-			this.sendReplyBox('A humanoid organism')
+			this.sendReplyBox('<br /><img src="http://i1071.photobucket.com/albums/u518/xHayleyHeart/emol_zpsad8598b7.png"><br /><b>Hayley</b><br />...also known as YukiNagato, SakuraKinomoto, Bumblebee, Toothless or Nepgear.<br /><br />  - Queen of Cute Gifs (mostly of bunnys)<br /> - Super Admin (*) <br /> - Kingdom Hearts Fangirl<br /><br />')
 		}
 		if (!matched) {
-			return this.sendReply('The entry "'+target+'" was not found.');
+			return this.sendReply('Unable to find that entry. Are you sure you spelt it correctly?');
 		}
 	},
 
@@ -848,24 +844,28 @@ var commands = exports.commands = {
 	staff: function(target, room, user) {
 		if (!this.canBroadcast()) return;
 		var matched = false;
-		if (target === '~' || target === 'admin') {
+		if (target === '~' || target === 'admin'|| target === 'admins'|| target === 'administrator') {
 			matched = true;
-			this.sendReplyBox('YukiNagato, Miikasa and Pachy')
+			this.sendReplyBox('<b>Current Admins:</b><br />YukiNagato, Miikasa and Pachy')
 		}
-		if (target === '&'|| target === 'leader') {
+			if (target === 'yuki' ||target === 'yukinagato' || target === 'hayley') {
 			matched = true;
-			this.sendReplyBox('')
+			this.sendReplyBox('YukiNagato<br /> Owner and Creator of Sanctuary Server. The only super admin (*) on the server at the moment.')
 		}
-		if (target === '@'|| target === 'mod') {
+		if (target === '&'|| target === 'leader'|| target === 'leaders') {
 			matched = true;
-			this.sendReplyBox('Attrage')
+			this.sendReplyBox('<b>Current Leaders:</b><br /> None at the moment')
 		}
-			if (target === '+'|| target === 'voice') {
+		if (target === '@'|| target === 'mod'|| target === 'mods') {
 			matched = true;
-			this.sendReplyBox('')
+			this.sendReplyBox('<b>Current Mods:</b><br /> Attrage and Sage Lute.')
+		}
+			if (target === '+'|| target === 'voice'|| target === 'voices') {
+			matched = true;
+			this.sendReplyBox('<b>Current Voices:</b><br /> Lacunae')
 		}
 		if (!matched) {
-			return this.sendReply('The entry "'+target+'" was not found.');
+			return this.sendReply('Unable to find that entry. Are you sure you spelt it correctly?');
 		}
 	},
 
